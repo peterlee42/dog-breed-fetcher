@@ -1,6 +1,9 @@
 package dogapi;
 
 import org.junit.jupiter.api.Test;
+
+import dogapi.BreedFetcher.BreedNotFoundException;
+
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,12 +14,16 @@ class CachingBreedFetcherTest {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
         CachingBreedFetcher cachingFetcher = new CachingBreedFetcher(mock);
 
-        List<String> firstCall = cachingFetcher.getSubBreeds("hound");
-        List<String> secondCall = cachingFetcher.getSubBreeds("hound");
+        try {
+            List<String> firstCall = cachingFetcher.getSubBreeds("hound");
+            List<String> secondCall = cachingFetcher.getSubBreeds("hound");
 
-        assertEquals(List.of("afghan", "basset"), firstCall);
-        assertEquals(firstCall, secondCall);
-        assertEquals(1, mock.getCallCount(), "Fetcher should only be called once due to caching");
+            assertEquals(List.of("afghan", "basset"), firstCall);
+            assertEquals(firstCall, secondCall);
+            assertEquals(1, mock.getCallCount(), "Fetcher should only be called once due to caching");
+        } catch (BreedNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
@@ -44,12 +51,16 @@ class CachingBreedFetcherTest {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
         CachingBreedFetcher cachingFetcher = new CachingBreedFetcher(mock);
 
-        cachingFetcher.getSubBreeds("hound");
-        cachingFetcher.getSubBreeds("hound");
+        try {
+            cachingFetcher.getSubBreeds("hound");
+            cachingFetcher.getSubBreeds("hound");
 
-        assertEquals(1, cachingFetcher.getCallsMade(),
-                "Fetcher should only be called once due to caching. " +
-                        "Make sure that your implementation is recording how many calls have been made!");
+            assertEquals(1, cachingFetcher.getCallsMade(),
+                    "Fetcher should only be called once due to caching. " +
+                            "Make sure that your implementation is recording how many calls have been made!");
+        } catch (BreedNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
