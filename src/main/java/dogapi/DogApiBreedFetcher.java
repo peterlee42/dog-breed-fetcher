@@ -17,10 +17,6 @@ import java.util.*;
  */
 public class DogApiBreedFetcher implements BreedFetcher {
     private final OkHttpClient client = new OkHttpClient();
-    private static final String API_URL_STRING = "https://dog.ceo/api/";
-    private static final String STATUS = "status";
-    private static final String STATUS_SUCCESS = "success";
-    private static final String MESSAGE = "message";
 
     /**
      * Fetch the list of sub breeds for the given breed from the dog.ceo API.
@@ -56,7 +52,7 @@ public class DogApiBreedFetcher implements BreedFetcher {
 
             return subBreedsArray;
 
-        } catch (IOException | JSONException event) {
+        } catch (IOException | JSONException e) {
             throw new BreedNotFoundException(breed);
         }
     }
